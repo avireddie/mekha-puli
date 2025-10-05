@@ -14,7 +14,10 @@ export interface Edge {
 export interface Action {
   actorId: string;
   targetId?: string;
-  type: 'move' | 'attack' | 'defend';
+  type: 'placeGoat' | 'moveGoat' | 'moveTiger' | 'captureTiger';
+  from?: string;
+  to?: string;
+  capturedGoat?: string; // For captureTiger actions
 }
 
 export interface GameState {
@@ -22,4 +25,10 @@ export interface GameState {
   currentTurn: Role;
   actions: Action[];
   winner?: Role;
+  // Game state tracking
+  tigerAt: string;
+  goatsAt: string[];
+  goatsPlaced: number;
+  goatsCaptured: number;
+  phase: 'placement' | 'movement';
 }
