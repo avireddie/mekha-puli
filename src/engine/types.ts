@@ -1,5 +1,21 @@
 export type Role = 'Player' | 'Enemy';
 
+export interface BoardConfig {
+  id: string;
+  name: string;
+  nodes: Node[];
+  initialTigers: string[];
+  totalGoats: number;
+  tigersWinAt: number;
+  captureMoves: CaptureMove[];
+}
+
+export interface CaptureMove {
+  from: string;
+  over: string;
+  to: string;
+}
+
 export interface Node {
   id: string;
   tier: number;
@@ -21,14 +37,16 @@ export interface Action {
 }
 
 export interface GameState {
-  nodes: Node[];
+  boardConfig: BoardConfig;
   currentTurn: Role;
   actions: Action[];
   winner?: Role;
   // Game state tracking
-  tigerAt: string;
+  tigerAt: string[];
   goatsAt: string[];
   goatsPlaced: number;
   goatsCaptured: number;
   phase: 'placement' | 'movement';
+  currentPlayer: Role;
+  selectedPiece?: string;
 }

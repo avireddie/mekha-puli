@@ -4,7 +4,7 @@ import { Board } from './ui/Board'
 import { HUD } from './ui/HUD'
 import { initGame, getLegalActions, applyAction, checkVictory } from './engine/engine'
 import type { Role, GameState, Action } from './engine/types'
-import { configTriangle10 } from './engine/configTriangle10'
+import { simpleBoardConfig } from './engine/boards/simpleBoard'
 import goatWinSound from './assets/audio/goat-win.mp3'
 import tigerWinSound from './assets/audio/tiger-win.mp3'
 import './App.css'
@@ -30,7 +30,7 @@ function App() {
     setPlayer1Name(p1Name)
     setPlayer2Name(p2Name)
     setPlayer1Role(role)
-    const newGameState = initGame()
+    const newGameState = initGame(simpleBoardConfig)
     setGameState(newGameState)
     updateLegalMoves(newGameState)
   }
@@ -51,13 +51,13 @@ function App() {
   }
 
   const updateLegalMoves = (state: GameState) => {
-    if (state.currentTurn === 'Player' && state.phase === 'movement') {
+    if (state.currentPlayer === 'Player' && state.phase === 'movement') {
       if (selectedGoat) {
         // For goat movement phase with selected goat, show only that goat's moves
-        const goatNode = state.nodes.find(n => n.id === selectedGoat)
+        const goatNode = state.boardConfig.nodes.find(n => n.id === selectedGoat)
         if (goatNode) {
           const goatMoves = goatNode.connectedTo.filter(connectedId => 
-            !state.goatsAt.includes(connectedId) && connectedId !== state.tigerAt
+            !state.goatsAt.includes(connectedId) && !state.tigerAt.includes(connectedId)
           )
           setLegalMoves(goatMoves)
           console.log(`Legal moves for selected goat ${selectedGoat}:`, goatMoves)
@@ -82,8 +82,8 @@ function App() {
     console.log(`Node clicked: ${nodeId}`)
     
     // In 2-player pass-and-play, both players can act during their turn
-    // The turn is determined by gameState.currentTurn
-    const currentPlayerRole = gameState.currentTurn
+    // The turn is determined by gameState.currentPlayer
+    const currentPlayerRole = gameState.currentPlayer
     console.log(`Current turn: ${currentPlayerRole} (${currentPlayerRole === 'Player' ? 'Goat' : 'Tiger'} player)`)
     
     // Create action based on current turn (not the selected role)
@@ -105,7 +105,7 @@ function App() {
         // Goat movement phase - two-step process
         
         // Reject clicks on Tiger during Goat player's turn
-        if (nodeId === gameState.tigerAt) {
+        if (gameState.tigerAt.includes(nodeId)) {
           console.log('Cannot select Tiger during Goat player\'s turn')
           return
         }
@@ -142,7 +142,7 @@ function App() {
       
       const legalActions = getLegalActions(gameState)
       const matchingAction = legalActions.find(action => 
-        action.from === gameState.tigerAt && action.to === nodeId
+        action.from && gameState.tigerAt.includes(action.from) && action.to === nodeId
       )
       
       if (matchingAction) {
@@ -173,7 +173,7 @@ function App() {
       // Play victory sound immediately
       if (winner === 'Player') {
         new Audio(goatWinSound).play().catch(err => console.log('Audio playback failed:', err))
-      } else {
+      } else if (winner === 'Enemy') {
         new Audio(tigerWinSound).play().catch(err => console.log('Audio playback failed:', err))
       }
       
@@ -234,10 +234,10 @@ function App() {
       />
       
       <Board
-        nodes={configTriangle10}
+        nodes={gameState.boardConfig.nodes}
         tigerAt={gameState.tigerAt}
         goatsAt={gameState.goatsAt}
-        currentTurn={gameState.currentTurn}
+        currentTurn={gameState.currentPlayer}
         onNodeClick={handleNodeClick}
         legalMoves={legalMoves}
       />

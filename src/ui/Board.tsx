@@ -3,7 +3,7 @@ import type { Node, Role } from '../engine/types';
 
 interface BoardProps {
   nodes: Node[];
-  tigerAt: string;
+  tigerAt: string[];
   goatsAt: string[];
   currentTurn: Role;
   onNodeClick: (nodeId: string) => void;
@@ -73,7 +73,7 @@ export const Board: React.FC<BoardProps> = ({
 
   const renderNode = (node: Node) => {
     const position = getNodePosition(node.id);
-    const isTiger = tigerAt === node.id;
+    const isTiger = tigerAt.includes(node.id);
     const isGoat = goatsAt.includes(node.id);
     const isLegalMove = legalMoves.includes(node.id);
     const isClickable = isLegalMove || (!isTiger && !isGoat && currentTurn === 'Player');
