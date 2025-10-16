@@ -30,7 +30,7 @@ export interface Edge {
 export interface Action {
   actorId: string;
   targetId?: string;
-  type: 'placeGoat' | 'moveGoat' | 'moveTiger' | 'captureTiger';
+  type: 'placeGoat' | 'moveGoat' | 'moveTiger' | 'captureTiger' | 'selectTiger';
   from?: string;
   to?: string;
   capturedGoat?: string; // For captureTiger actions

@@ -8,6 +8,7 @@ interface BoardProps {
   currentTurn: Role;
   onNodeClick: (nodeId: string) => void;
   legalMoves?: string[];
+  selectedPiece?: string;
 }
 
 export const Board: React.FC<BoardProps> = ({ 
@@ -16,7 +17,8 @@ export const Board: React.FC<BoardProps> = ({
   goatsAt, 
   currentTurn, 
   onNodeClick,
-  legalMoves = []
+  legalMoves = [],
+  selectedPiece
 }) => {
   // Detect board type based on number of nodes
   const isTraditionalBoard = nodes.length > 10;
@@ -130,6 +132,7 @@ export const Board: React.FC<BoardProps> = ({
     const isTiger = tigerAt.includes(node.id);
     const isGoat = goatsAt.includes(node.id);
     const isLegalMove = legalMoves.includes(node.id);
+    const isSelected = selectedPiece === node.id;
     const isClickable = isLegalMove || (!isTiger && !isGoat && currentTurn === 'Player');
 
     let nodeColor = '#f0f0f0'; // Default empty
@@ -143,6 +146,18 @@ export const Board: React.FC<BoardProps> = ({
         nodeColor = '#ffd93d'; // Yellow for tiger player's legal moves
       }
     }
+    
+    // Highlight selected tiger with pulsing effect
+    let strokeColor = '#333';
+    let strokeWidth = '2';
+    if (isLegalMove) {
+      strokeColor = currentTurn === 'Player' ? '#228B22' : '#ff6b35';
+      strokeWidth = '3';
+    }
+    if (isSelected) {
+      strokeColor = '#ff0000'; // Red for selected tiger
+      strokeWidth = '4';
+    }
 
     return (
       <g key={node.id}>
@@ -151,8 +166,8 @@ export const Board: React.FC<BoardProps> = ({
           cy={position.y}
           r="20"
           fill={nodeColor}
-          stroke={isLegalMove ? (currentTurn === 'Player' ? '#228B22' : '#ff6b35') : '#333'}
-          strokeWidth={isLegalMove ? '3' : '2'}
+          stroke={strokeColor}
+          strokeWidth={strokeWidth}
           onClick={() => {
             console.log(`Clicked node: ${node.id}`);
             onNodeClick(node.id);

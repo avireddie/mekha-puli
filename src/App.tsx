@@ -139,7 +139,7 @@ function App() {
         }
       }
     } else {
-      // Tiger movement - use legal actions to determine if it's a capture
+      // Tiger movement - two-step selection
       
       // Reject clicks on Goats during Tiger player's turn
       if (gameState.goatsAt.includes(nodeId)) {
@@ -148,15 +148,31 @@ function App() {
       }
       
       const legalActions = getLegalActions(gameState)
-      const matchingAction = legalActions.find(action => 
-        action.from && gameState.tigerAt.includes(action.from) && action.to === nodeId
-      )
       
-      if (matchingAction) {
-        action = matchingAction
+      // Check if clicking on a tiger to select it
+      if (gameState.tigerAt.includes(nodeId)) {
+        const selectAction = legalActions.find(action => 
+          action.type === 'selectTiger' && action.targetId === nodeId
+        )
+        if (selectAction) {
+          action = selectAction
+          console.log(`Selected tiger: ${nodeId}`)
+        } else {
+          console.log('Cannot select this tiger')
+          return
+        }
       } else {
-        console.log('Invalid Tiger move: Not in legal actions')
-        return
+        // Check if clicking on a destination for selected tiger
+        const matchingAction = legalActions.find(action => 
+          action.from && gameState.tigerAt.includes(action.from) && action.to === nodeId
+        )
+        
+        if (matchingAction) {
+          action = matchingAction
+        } else {
+          console.log('Invalid Tiger move: Not in legal actions')
+          return
+        }
       }
     }
 
@@ -230,7 +246,7 @@ function App() {
       <h1>Mekha Puli</h1>
       
       <HUD
-        currentTurn={gameState.currentTurn}
+        currentTurn={gameState.currentPlayer}
         phase={gameState.phase}
         goatsPlaced={gameState.goatsPlaced}
         goatsCaptured={gameState.goatsCaptured}
@@ -238,6 +254,8 @@ function App() {
         onNewGame={handleNewGame}
         currentPlayerName={currentPlayerName}
         currentPlayerType={currentPlayerType}
+        totalGoats={gameState.boardConfig.totalGoats}
+        tigersWinAt={gameState.boardConfig.tigersWinAt}
       />
       
       <Board
@@ -247,6 +265,7 @@ function App() {
         currentTurn={gameState.currentPlayer}
         onNodeClick={handleNodeClick}
         legalMoves={legalMoves}
+        selectedPiece={gameState.selectedPiece}
       />
 
       {/* Victory Modal */}

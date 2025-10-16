@@ -10,6 +10,8 @@ interface HUDProps {
   onNewGame: () => void;
   currentPlayerName?: string;
   currentPlayerType?: string;
+  totalGoats: number;
+  tigersWinAt: number;
 }
 
 export const HUD: React.FC<HUDProps> = ({
@@ -20,22 +22,24 @@ export const HUD: React.FC<HUDProps> = ({
   playerRole,
   onNewGame,
   currentPlayerName = 'Current Player',
-  currentPlayerType = 'Player'
+  currentPlayerType = 'Player',
+  totalGoats,
+  tigersWinAt
 }) => {
   const isGoatPlayer = playerRole === 'Player';
   
   const getStatusMessage = () => {
     if (phase === 'placement') {
       if (currentTurn === 'Player') {
-        return `Place a goat (${goatsPlaced}/5 placed)`;
+        return `Place a goat (${goatsPlaced}/${totalGoats} placed)`;
       } else {
-        return `Tiger's turn - move tiger or capture`;
+        return `Tiger's turn - select a tiger to move`;
       }
     } else {
       if (currentTurn === 'Player') {
         return `Move a goat`;
       } else {
-        return `Tiger's turn - move tiger or capture`;
+        return `Tiger's turn - select a tiger to move`;
       }
     }
   };
@@ -62,12 +66,12 @@ export const HUD: React.FC<HUDProps> = ({
       <div className="hud-stats">
         <div className="stat-item">
           <div className="stat-label">Goats Placed</div>
-          <div className="stat-value">{goatsPlaced}/5</div>
+          <div className="stat-value">{goatsPlaced}/{totalGoats}</div>
         </div>
         
         <div className="stat-item">
           <div className="stat-label">Goats Captured</div>
-          <div className="stat-value">{goatsCaptured}/2</div>
+          <div className="stat-value">{goatsCaptured}/{tigersWinAt}</div>
         </div>
         
         <div className="stat-item">
