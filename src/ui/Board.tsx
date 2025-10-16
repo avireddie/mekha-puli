@@ -18,8 +18,19 @@ export const Board: React.FC<BoardProps> = ({
   onNodeClick,
   legalMoves = []
 }) => {
+  // Detect board type based on number of nodes
+  const isTraditionalBoard = nodes.length > 10;
+  
   // Calculate positions for each tier (triangle-shaped: narrow at top, wide at base)
   const getNodePosition = (nodeId: string): { x: number; y: number } => {
+    if (isTraditionalBoard) {
+      return getTraditionalNodePosition(nodeId);
+    } else {
+      return getSimpleNodePosition(nodeId);
+    }
+  };
+
+  const getSimpleNodePosition = (nodeId: string): { x: number; y: number } => {
     const baseX = 500;  // Center X
     const baseY = 100;  // Top Y
     const tierHeight = 150;  // Vertical space between tiers
@@ -41,6 +52,49 @@ export const Board: React.FC<BoardProps> = ({
       case 'n8': return { x: baseX - 240, y: baseY + tierHeight * 3 };
       case 'n9': return { x: baseX, y: baseY + tierHeight * 3 };
       case 'n10': return { x: baseX + 240, y: baseY + tierHeight * 3 };
+      
+      default: return { x: 0, y: 0 };
+    }
+  };
+
+  const getTraditionalNodePosition = (nodeId: string): { x: number; y: number } => {
+    const baseX = 600;  // Center X for wider board
+    const baseY = 50;   // Top Y
+    const tierHeight = 140;  // Increased vertical spacing between tiers
+
+    switch (nodeId) {
+      // Tier 1: 1 node (top of diamond)
+      case 'n1': return { x: baseX, y: baseY };
+      
+      // Tier 2: 6 nodes - Moderate width
+      case 'n2': return { x: baseX - 300, y: baseY + tierHeight };
+      case 'n3': return { x: baseX - 180, y: baseY + tierHeight };
+      case 'n4': return { x: baseX - 60, y: baseY + tierHeight };
+      case 'n5': return { x: baseX + 60, y: baseY + tierHeight };
+      case 'n6': return { x: baseX + 180, y: baseY + tierHeight };
+      case 'n7': return { x: baseX + 300, y: baseY + tierHeight };
+      
+      // Tier 3: 6 nodes - WIDER than Tier 2
+      case 'n8': return { x: baseX - 400, y: baseY + tierHeight * 2 };
+      case 'n9': return { x: baseX - 240, y: baseY + tierHeight * 2 };
+      case 'n10': return { x: baseX - 80, y: baseY + tierHeight * 2 };
+      case 'n11': return { x: baseX + 80, y: baseY + tierHeight * 2 };
+      case 'n12': return { x: baseX + 240, y: baseY + tierHeight * 2 };
+      case 'n13': return { x: baseX + 400, y: baseY + tierHeight * 2 };
+      
+      // Tier 4: 6 nodes - SIGNIFICANTLY WIDER (widest tier)
+      case 'n14': return { x: baseX - 500, y: baseY + tierHeight * 3 };
+      case 'n15': return { x: baseX - 300, y: baseY + tierHeight * 3 };
+      case 'n16': return { x: baseX - 100, y: baseY + tierHeight * 3 };
+      case 'n17': return { x: baseX + 100, y: baseY + tierHeight * 3 };
+      case 'n18': return { x: baseX + 300, y: baseY + tierHeight * 3 };
+      case 'n19': return { x: baseX + 500, y: baseY + tierHeight * 3 };
+      
+      // Tier 5: 4 nodes - 770px width (diamond base)
+      case 'n20': return { x: baseX - 385, y: baseY + tierHeight * 4 };
+      case 'n21': return { x: baseX - 115, y: baseY + tierHeight * 4 };
+      case 'n22': return { x: baseX + 115, y: baseY + tierHeight * 4 };
+      case 'n23': return { x: baseX + 385, y: baseY + tierHeight * 4 };
       
       default: return { x: 0, y: 0 };
     }
@@ -146,7 +200,11 @@ export const Board: React.FC<BoardProps> = ({
 
   return (
     <div className="board-container">
-      <svg width="1000" height="800" viewBox="0 0 1000 800">
+      <svg 
+        width={isTraditionalBoard ? "1200" : "1000"} 
+        height={isTraditionalBoard ? "1000" : "800"} 
+        viewBox={isTraditionalBoard ? "0 0 1200 1000" : "0 0 1000 800"}
+      >
         {renderConnections()}
         {nodes.map(renderNode)}
       </svg>

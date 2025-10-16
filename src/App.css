@@ -119,6 +119,21 @@
   background: #44a08d;
 }
 
+/* Traditional Board Styling */
+.board-container {
+  overflow: auto;
+  max-width: 100%;
+  max-height: 80vh;
+}
+
+/* Responsive adjustments for traditional board */
+@media (max-width: 1200px) {
+  .board-container svg {
+    max-width: 100%;
+    height: auto;
+  }
+}
+
 .role-options {
   display: flex;
   gap: 2rem;
