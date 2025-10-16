@@ -2,13 +2,19 @@ import React, { useState } from 'react';
 import type { Role } from '../engine/types';
 
 interface RoleSelectProps {
-  onRoleSelect: (role: Role, player1Name: string, player2Name: string) => void;
+  onRoleSelect: (role: Role, player1Name: string, player2Name: string, boardType: 'simple' | 'traditional') => void;
 }
 
 export const RoleSelect: React.FC<RoleSelectProps> = ({ onRoleSelect }) => {
-  const [step, setStep] = useState<1 | 2 | 3>(1);
+  const [step, setStep] = useState<0 | 1 | 2 | 3>(0);
+  const [boardType, setBoardType] = useState<'simple' | 'traditional' | null>(null);
   const [player1Name, setPlayer1Name] = useState('');
   const [player2Name, setPlayer2Name] = useState('');
+
+  const handleBoardSelect = (board: 'simple' | 'traditional') => {
+    setBoardType(board);
+    setStep(1);
+  };
 
   const handlePlayer1Next = () => {
     if (player1Name.trim()) {
@@ -23,8 +29,84 @@ export const RoleSelect: React.FC<RoleSelectProps> = ({ onRoleSelect }) => {
   };
 
   const handleRoleSelection = (role: Role) => {
-    onRoleSelect(role, player1Name.trim(), player2Name.trim());
+    if (boardType) {
+      onRoleSelect(role, player1Name.trim(), player2Name.trim(), boardType);
+    }
   };
+
+  // Step 0: Board selection
+  if (step === 0) {
+    return (
+      <div className="role-select">
+        <h2>Choose Board Type</h2>
+        <p>Select the board configuration for your game:</p>
+        
+        <div className="board-cards">
+          <div className="board-card" onClick={() => handleBoardSelect('simple')}>
+            <div className="board-card-header">
+              <h3>Simple Board</h3>
+              <span className="board-emoji">🔺</span>
+            </div>
+            <div className="board-card-content">
+              <div className="board-stats">
+                <div className="stat">
+                  <span className="stat-label">Nodes:</span>
+                  <span className="stat-value">10</span>
+                </div>
+                <div className="stat">
+                  <span className="stat-label">Tigers:</span>
+                  <span className="stat-value">1</span>
+                </div>
+                <div className="stat">
+                  <span className="stat-label">Goats:</span>
+                  <span className="stat-value">5</span>
+                </div>
+                <div className="stat">
+                  <span className="stat-label">Tiger Wins At:</span>
+                  <span className="stat-value">2 captures</span>
+                </div>
+              </div>
+              <p className="board-description">
+                Classic 10-node triangular board. Perfect for quick games and learning the rules.
+              </p>
+              <button className="select-board-btn">Select Simple Board</button>
+            </div>
+          </div>
+
+          <div className="board-card" onClick={() => handleBoardSelect('traditional')}>
+            <div className="board-card-header">
+              <h3>Traditional Board</h3>
+              <span className="board-emoji">🔺🔺🔺</span>
+            </div>
+            <div className="board-card-content">
+              <div className="board-stats">
+                <div className="stat">
+                  <span className="stat-label">Nodes:</span>
+                  <span className="stat-value">23</span>
+                </div>
+                <div className="stat">
+                  <span className="stat-label">Tigers:</span>
+                  <span className="stat-value">3</span>
+                </div>
+                <div className="stat">
+                  <span className="stat-label">Goats:</span>
+                  <span className="stat-value">15</span>
+                </div>
+                <div className="stat">
+                  <span className="stat-label">Tiger Wins At:</span>
+                  <span className="stat-value">5 captures</span>
+                </div>
+              </div>
+              <p className="board-description">
+                Full traditional 23-node board with 3 tigers. More strategic and challenging gameplay.
+              </p>
+              <button className="select-board-btn">Select Traditional Board</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   // Step 1: Player 1 enters name
   if (step === 1) {
@@ -75,7 +157,7 @@ export const RoleSelect: React.FC<RoleSelectProps> = ({ onRoleSelect }) => {
           <div className="button-group">
             <button 
               className="back-button"
-              onClick={() => setStep(1)}
+              onClick={() => setStep(0)}
             >
               ← Back
             </button>

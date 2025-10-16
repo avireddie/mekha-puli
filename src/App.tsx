@@ -5,6 +5,7 @@ import { HUD } from './ui/HUD'
 import { initGame, getLegalActions, applyAction, checkVictory } from './engine/engine'
 import type { Role, GameState, Action } from './engine/types'
 import { simpleBoardConfig } from './engine/boards/simpleBoard'
+import { traditionalBoardConfig } from './engine/boards/traditionalBoard'
 import goatWinSound from './assets/audio/goat-win.mp3'
 import tigerWinSound from './assets/audio/tiger-win.mp3'
 import './App.css'
@@ -14,6 +15,7 @@ function App() {
   const [player1Role, setPlayer1Role] = useState<Role | null>(null)
   const [player1Name, setPlayer1Name] = useState<string>('')
   const [player2Name, setPlayer2Name] = useState<string>('')
+  const [boardType, setBoardType] = useState<'simple' | 'traditional'>('simple')
   const [legalMoves, setLegalMoves] = useState<string[]>([])
   const [selectedGoat, setSelectedGoat] = useState<string | null>(null)
   const [victoryModal, setVictoryModal] = useState<{show: boolean, winner: string, emoji: string}>({show: false, winner: '', emoji: ''})
@@ -25,12 +27,16 @@ function App() {
     }
   }, [selectedGoat])
 
-  const handleRoleSelect = (role: Role, p1Name: string, p2Name: string) => {
-    console.log(`${p1Name} selected role: ${role}`)
+  const handleRoleSelect = (role: Role, p1Name: string, p2Name: string, board: 'simple' | 'traditional') => {
+    console.log(`${p1Name} selected role: ${role} on ${board} board`)
     setPlayer1Name(p1Name)
     setPlayer2Name(p2Name)
     setPlayer1Role(role)
-    const newGameState = initGame(simpleBoardConfig)
+    setBoardType(board)
+    
+    // Load appropriate board configuration
+    const boardConfig = board === 'simple' ? simpleBoardConfig : traditionalBoardConfig
+    const newGameState = initGame(boardConfig)
     setGameState(newGameState)
     updateLegalMoves(newGameState)
   }
@@ -41,6 +47,7 @@ function App() {
     setPlayer1Role(null)
     setPlayer1Name('')
     setPlayer2Name('')
+    setBoardType('simple')
     setLegalMoves([])
     setSelectedGoat(null)
     setVictoryModal({show: false, winner: '', emoji: ''})
