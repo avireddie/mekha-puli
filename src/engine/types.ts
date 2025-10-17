@@ -47,6 +47,5 @@ export interface GameState {
   goatsPlaced: number;
   goatsCaptured: number;
   phase: 'placement' | 'movement';
-  currentPlayer: Role;
   selectedPiece?: string;
 }

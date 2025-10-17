@@ -11,7 +11,6 @@ export function initGame(boardConfig: BoardConfig = simpleBoardConfig): GameStat
     goatsPlaced: 0,
     goatsCaptured: 0,
     phase: 'placement',
-    currentPlayer: 'Player',
     selectedPiece: undefined
   };
 }
@@ -19,7 +18,7 @@ export function initGame(boardConfig: BoardConfig = simpleBoardConfig): GameStat
 export function getLegalActions(state: GameState): Action[] {
   const actions: Action[] = [];
   
-  if (state.currentPlayer === 'Player') {
+  if (state.currentTurn === 'Player') {
     // Goat player logic
     if (state.phase === 'placement') {
       // Find empty nodes
@@ -55,7 +54,7 @@ export function getLegalActions(state: GameState): Action[] {
   } else {
     // Tiger player logic - handle multiple tigers with two-step selection
     if (state.selectedPiece) {
-      // If a tiger is selected, show only moves for that tiger
+      // If a tiger is selected, show moves for that tiger AND other tigers as selectable
       const selectedTigerId = state.selectedPiece;
       const node = state.boardConfig.nodes.find(n => n.id === selectedTigerId);
       if (node) {
@@ -87,6 +86,17 @@ export function getLegalActions(state: GameState): Action[] {
           }
         });
       }
+      
+      // Also show other tigers as selectable (allow switching)
+      state.tigerAt.forEach(tigerId => {
+        if (tigerId !== selectedTigerId) {
+          actions.push({
+            actorId: 'tiger',
+            targetId: tigerId,
+            type: 'selectTiger'
+          });
+        }
+      });
     } else {
       // No tiger selected - show all tigers as selectable
       state.tigerAt.forEach(tigerId => {
@@ -116,7 +126,7 @@ export function applyAction(state: GameState, action: Action): GameState {
         if (newState.goatsPlaced >= state.boardConfig.totalGoats) {
           newState.phase = 'movement';
         }
-        newState.currentPlayer = 'Enemy';
+        newState.currentTurn = 'Enemy';
       }
       break;
       
@@ -125,7 +135,7 @@ export function applyAction(state: GameState, action: Action): GameState {
         newState.goatsAt = state.goatsAt.map(goatId => 
           goatId === action.from ? action.to! : goatId
         );
-        newState.currentPlayer = 'Enemy';
+        newState.currentTurn = 'Enemy';
       }
       break;
       
@@ -142,7 +152,7 @@ export function applyAction(state: GameState, action: Action): GameState {
           id === action.from ? action.to! : id
         );
         newState.selectedPiece = undefined; // Clear selection after move
-        newState.currentPlayer = 'Player';
+        newState.currentTurn = 'Player';
       }
       break;
       
@@ -154,7 +164,7 @@ export function applyAction(state: GameState, action: Action): GameState {
         newState.goatsAt = state.goatsAt.filter(goatId => goatId !== action.capturedGoat);
         newState.goatsCaptured = state.goatsCaptured + 1;
         newState.selectedPiece = undefined; // Clear selection after capture
-        newState.currentPlayer = 'Player';
+        newState.currentTurn = 'Player';
       }
       break;
   }

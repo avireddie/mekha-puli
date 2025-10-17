@@ -12,81 +12,67 @@ export const traditionalCaptureMoves: CaptureMove[] = [
   { from: 'n2', over: 'n3', to: 'n4' },
   { from: 'n2', over: 'n8', to: 'n14' },
   
-  { from: 'n3', over: 'n1', to: 'n6' },
-  { from: 'n3', over: 'n2', to: 'n4' },
   { from: 'n3', over: 'n4', to: 'n5' },
   { from: 'n3', over: 'n9', to: 'n15' },
   
-  { from: 'n4', over: 'n1', to: 'n6' },
-  { from: 'n4', over: 'n3', to: 'n5' },
+  { from: 'n4', over: 'n3', to: 'n2' },
   { from: 'n4', over: 'n5', to: 'n6' },
   { from: 'n4', over: 'n10', to: 'n16' },
   
-  { from: 'n5', over: 'n1', to: 'n6' },
-  { from: 'n5', over: 'n4', to: 'n6' },
+  { from: 'n5', over: 'n4', to: 'n3' },
   { from: 'n5', over: 'n6', to: 'n7' },
   { from: 'n5', over: 'n11', to: 'n17' },
   
-  { from: 'n6', over: 'n1', to: 'n5' },
   { from: 'n6', over: 'n5', to: 'n4' },
-  { from: 'n6', over: 'n7', to: 'n8' },
   { from: 'n6', over: 'n12', to: 'n18' },
   
   { from: 'n7', over: 'n6', to: 'n5' },
   { from: 'n7', over: 'n13', to: 'n19' },
   
   // Tier 3 captures
-  { from: 'n8', over: 'n2', to: 'n3' },
   { from: 'n8', over: 'n9', to: 'n10' },
-  { from: 'n8', over: 'n14', to: 'n20' },
   
   { from: 'n9', over: 'n3', to: 'n1' },
-  { from: 'n9', over: 'n8', to: 'n10' },
   { from: 'n9', over: 'n10', to: 'n11' },
-  { from: 'n9', over: 'n15', to: 'n21' },
+  { from: 'n9', over: 'n15', to: 'n20' },
   
   { from: 'n10', over: 'n4', to: 'n1' },
-  { from: 'n10', over: 'n9', to: 'n11' },
+  { from: 'n10', over: 'n9', to: 'n8' },
   { from: 'n10', over: 'n11', to: 'n12' },
-  { from: 'n10', over: 'n16', to: 'n22' },
+  { from: 'n10', over: 'n16', to: 'n21' },
   
   { from: 'n11', over: 'n5', to: 'n1' },
-  { from: 'n11', over: 'n10', to: 'n12' },
+  { from: 'n11', over: 'n10', to: 'n9' },
   { from: 'n11', over: 'n12', to: 'n13' },
-  { from: 'n11', over: 'n17', to: 'n23' },
+  { from: 'n11', over: 'n17', to: 'n22' },
   
   { from: 'n12', over: 'n6', to: 'n1' },
-  { from: 'n12', over: 'n11', to: 'n13' },
-  { from: 'n12', over: 'n13', to: 'n14' },
-  { from: 'n12', over: 'n18', to: 'n24' }, // This would be invalid, removing
+  { from: 'n12', over: 'n11', to: 'n10' },
+  { from: 'n12', over: 'n18', to: 'n23' }, 
   
-  { from: 'n13', over: 'n7', to: 'n6' },
   { from: 'n13', over: 'n12', to: 'n11' },
-  { from: 'n13', over: 'n19', to: 'n25' }, // This would be invalid, removing
+
   
   // Tier 4 captures
   { from: 'n14', over: 'n8', to: 'n2' },
   { from: 'n14', over: 'n15', to: 'n16' },
   
   { from: 'n15', over: 'n9', to: 'n3' },
-  { from: 'n15', over: 'n14', to: 'n16' },
   { from: 'n15', over: 'n16', to: 'n17' },
-  { from: 'n15', over: 'n20', to: 'n22' },
+
   
   { from: 'n16', over: 'n10', to: 'n4' },
-  { from: 'n16', over: 'n15', to: 'n17' },
+  { from: 'n16', over: 'n15', to: 'n14' },
   { from: 'n16', over: 'n17', to: 'n18' },
-  { from: 'n16', over: 'n21', to: 'n23' },
+
   
   { from: 'n17', over: 'n11', to: 'n5' },
-  { from: 'n17', over: 'n16', to: 'n18' },
+  { from: 'n17', over: 'n16', to: 'n15' },
   { from: 'n17', over: 'n18', to: 'n19' },
-  { from: 'n17', over: 'n22', to: 'n24' }, // This would be invalid, removing
   
   { from: 'n18', over: 'n12', to: 'n6' },
-  { from: 'n18', over: 'n17', to: 'n19' },
-  { from: 'n18', over: 'n19', to: 'n20' },
-  { from: 'n18', over: 'n23', to: 'n25' }, // This would be invalid, removing
+  { from: 'n18', over: 'n17', to: 'n16' },
+  
   
   { from: 'n19', over: 'n13', to: 'n7' },
   { from: 'n19', over: 'n18', to: 'n17' },
@@ -96,12 +82,10 @@ export const traditionalCaptureMoves: CaptureMove[] = [
   { from: 'n20', over: 'n21', to: 'n22' },
   
   { from: 'n21', over: 'n16', to: 'n10' },
-  { from: 'n21', over: 'n20', to: 'n22' },
   { from: 'n21', over: 'n22', to: 'n23' },
   
   { from: 'n22', over: 'n17', to: 'n11' },
-  { from: 'n22', over: 'n21', to: 'n23' },
-  { from: 'n22', over: 'n23', to: 'n24' }, // This would be invalid, removing
+  { from: 'n22', over: 'n21', to: 'n20' },
   
   { from: 'n23', over: 'n18', to: 'n12' },
   { from: 'n23', over: 'n22', to: 'n21' }

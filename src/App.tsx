@@ -58,7 +58,7 @@ function App() {
   }
 
   const updateLegalMoves = (state: GameState) => {
-    if (state.currentPlayer === 'Player' && state.phase === 'movement') {
+    if (state.currentTurn === 'Player' && state.phase === 'movement') {
       if (selectedGoat) {
         // For goat movement phase with selected goat, show only that goat's moves
         const goatNode = state.boardConfig.nodes.find(n => n.id === selectedGoat)
@@ -89,8 +89,8 @@ function App() {
     console.log(`Node clicked: ${nodeId}`)
     
     // In 2-player pass-and-play, both players can act during their turn
-    // The turn is determined by gameState.currentPlayer
-    const currentPlayerRole = gameState.currentPlayer
+    // The turn is determined by gameState.currentTurn
+    const currentPlayerRole = gameState.currentTurn
     console.log(`Current turn: ${currentPlayerRole} (${currentPlayerRole === 'Player' ? 'Goat' : 'Tiger'} player)`)
     
     // Create action based on current turn (not the selected role)
@@ -246,7 +246,7 @@ function App() {
       <h1>Mekha Puli</h1>
       
       <HUD
-        currentTurn={gameState.currentPlayer}
+        currentTurn={gameState.currentTurn}
         phase={gameState.phase}
         goatsPlaced={gameState.goatsPlaced}
         goatsCaptured={gameState.goatsCaptured}
@@ -262,7 +262,7 @@ function App() {
         nodes={gameState.boardConfig.nodes}
         tigerAt={gameState.tigerAt}
         goatsAt={gameState.goatsAt}
-        currentTurn={gameState.currentPlayer}
+        currentTurn={gameState.currentTurn}
         onNodeClick={handleNodeClick}
         legalMoves={legalMoves}
         selectedPiece={gameState.selectedPiece}
